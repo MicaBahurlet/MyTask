@@ -17,7 +17,7 @@ export const getTask = async (req, res) => {
     return res.status(404).json({ message: "Tarea no encontrada" });
   }
 
-  res.json(result [0]); // quiero que solo me devuelva el primero del array
+  res.json(result[0]); // quiero que solo me devuelva el primero del array
 };
 //Tipié mal en la creación de la tabla, es tittle. title no existe.
 export const createTask = async (req, res) => {
@@ -29,9 +29,26 @@ export const createTask = async (req, res) => {
   console.log(result);
   res.json({ id: result.insertId, tittle, description });
 };
-export const updateTasks = (req, res) => {
-  res.send("Actualizando tarea");
+export const updateTask = async (req, res) => {
+  const result = await pool.query("UPDATE tasks SET ? WHERE id = ?", [
+    req.body,
+    req.params.id,
+  ]);
+  res.json(result);
+
+
+
+
+
 };
-export const deleteTasks = (req, res) => {
-  res.send("Eliminando tarea");
+export const deleteTasks = async (req, res) => {
+  const [result] = await pool.query("DELETE FROM tasks WHERE id = ?", [
+    req.params.id,
+  ]);
+  
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ message: "Tarea no encontrada" });
+  }
+
+  return res.sendStatus(204);
 };
