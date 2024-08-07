@@ -6,6 +6,8 @@ import taskRoutes from "./server/routes/tasks.routes.js";
 
 const app = express();
 
+app.use(express.json()); //para procesar los datos que lelguen en formato json
+
 app.use(indexRoutes);
 app.use(taskRoutes);
 app.listen(PORT);
