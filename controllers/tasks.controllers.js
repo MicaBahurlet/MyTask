@@ -26,16 +26,17 @@ export const getTask = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-//Tipié mal en la creación de la tabla, es tittle. title no existe.
+
 export const createTask = async (req, res) => {
+
   try {
-    const { tittle, description } = req.body;
+    const { title, description } = req.body;
     const [result] = await pool.query(
-      "INSERT INTO tasks(tittle, description) VALUES (?, ?)",
-      [tittle, description]
+      "INSERT INTO tasks(title, description) VALUES (?, ?)",
+      [title, description]
     );
     console.log(result);
-    res.json({ id: result.insertId, tittle, description });
+    res.json({ id: result.insertId, title, description });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
