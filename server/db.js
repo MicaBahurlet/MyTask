@@ -8,10 +8,10 @@ export const pool = createPool({
     database: "tasksdb"
 });
 
-export const usersPool = createPool({
-    host: "localhost",
-    user: "root",
-    password: "Mytask1",
-    port: 3306,
-    database: "usersdb"
-});
+// export const usersPool = createPool({
+//     host: "localhost",
+//     user: "root",
+//     password: "Mytask1",
+//     port: 3306,
+//     database: "usersdb"
+// });

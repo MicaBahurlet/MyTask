@@ -15,7 +15,7 @@ export const registerUser = async (req, res) => {
         return res.status(400).json({ message: "El usuario ya existe" });
       }
   
-      // Cifrar la contraseña
+      // cifro contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
   
       // nuevo usuario en la base de datos
@@ -44,14 +44,14 @@ export const loginUser = async (req, res) => {
   
       const user = users[0];
   
-      // Comparar la contraseña proporcionada con la almacenada
+      // comparar contraseña nueva con la almacenada
       const isMatch = await bcrypt.compare(password, user.password);
   
       if (!isMatch) {
         return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
       }
   
-      // Generar un token JWT
+      //  token JWT
       const token = jwt.sign({ userId: user.id }, 'tu_clave_secreta', { expiresIn: '1h' });
   
       res.json({ token });

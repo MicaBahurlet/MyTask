@@ -1,7 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs"; 
 import jwt from "jsonwebtoken"; 
-import { usersPool } from "../db.js"; //  pool para usersdb
+import { pool } from "../db.js"; 
 
 const router = Router();
 
@@ -10,14 +10,14 @@ router.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
-        const [existingUser] = await usersPool.query("SELECT * FROM users WHERE email = ?", [email]);
+        const [existingUser] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
         if (existingUser.length > 0) {
             return res.status(400).json({ message: "El usuario ya existe" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await usersPool.query("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [
+        await pool.query("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [
             username,
             email,
             hashedPassword
@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const [user] = await usersPool.query("SELECT * FROM users WHERE email = ?", [email]);
+        const [user] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
         if (user.length === 0) {
             return res.status(400).json({ message: "Usuario no encontrado" });
         }
@@ -44,7 +44,6 @@ router.post("/login", async (req, res) => {
         if (!validPassword) {
             return res.status(400).json({ message: "Contraseña incorrecta" });
         }
-
         const token = jwt.sign({ userId: user[0].id }, "tu_secreto_jwt", { expiresIn: "1h" });
 
         res.json({ token, message: "Inicio de sesión exitoso" });

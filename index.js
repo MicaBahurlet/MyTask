@@ -1,6 +1,4 @@
 
-
-
 import express from "express";
 import cors from "cors";
 import { PORT } from "./server/config.js";
@@ -12,10 +10,10 @@ import authRoutes from "./server/routes/auth.routes.js";
 const app = express();
 
 app.use(cors());
-app.use(express.json()); // Para procesar los datos que lleguen en formato JSON
+app.use(express.json()); // para que los datos que lleguen en formato JSON
 
 app.use(indexRoutes);
-app.use(authRoutes); // rutas de autenticación
+app.use(authRoutes); // rutas de autenticación de usuario
 app.use(taskRoutes);
 
 app.listen(PORT, () => {

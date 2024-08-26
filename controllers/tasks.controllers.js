@@ -1,5 +1,5 @@
 import { pool } from "../server/db.js";
-
+import jwt from "jsonwebtoken"; 
 export const getTasks = async (req, res) => {
   try {
     const [result] = await pool.query(
@@ -28,12 +28,14 @@ export const getTask = async (req, res) => {
 };
 
 export const createTask = async (req, res) => {
-
   try {
-    const { title, description } = req.body;
+    const { title, description, token } = req.body; //to do: sacar token del body y obtenerlo del header 
+    const decoded = jwt.verify(token, "tu_secreto_jwt"); 
+    const user_id = decoded.userId;
+
     const [result] = await pool.query(
-      "INSERT INTO tasks(title, description) VALUES (?, ?)",
-      [title, description]
+      "INSERT INTO tasks(title, description, user_id) VALUES (?, ?, ?)",
+      [title, description, user_id]
     );
     console.log(result);
     res.json({ id: result.insertId, title, description });
