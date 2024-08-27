@@ -1,15 +1,22 @@
 import { pool } from "../server/db.js";
 import jwt from "jsonwebtoken"; 
+
+
 export const getTasks = async (req, res) => {
   try {
+    const userId = req.user.userId; // solo quiero que traiga las del usuario logueado
+
+      //solo traeme todo del usuario logueado y ordenala por la fecha
     const [result] = await pool.query(
-      "SELECT * FROM tasks ORDER BY createAt ASC"
+      "SELECT * FROM tasks WHERE user_id = ? ORDER BY createAt DESC",  //lo ordeno para que quede la más reciente primero, sino cambiar por ASC
+      [userId] //uso el id que extraje del token
     );
     res.json(result);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
+
 
 export const getTask = async (req, res) => {
   try {
@@ -27,22 +34,23 @@ export const getTask = async (req, res) => {
   }
 };
 
+
 export const createTask = async (req, res) => {
   try {
-    const { title, description, token } = req.body; //to do: sacar token del body y obtenerlo del header 
-    const decoded = jwt.verify(token, "tu_secreto_jwt"); 
-    const user_id = decoded.userId;
+    const { title, description } = req.body; //para poder eliminar el token del body
+    const userId = req.user.userId; //me traigo el id del usuario
 
     const [result] = await pool.query(
       "INSERT INTO tasks(title, description, user_id) VALUES (?, ?, ?)",
-      [title, description, user_id]
+      [title, description, userId]
     );
-    console.log(result);
     res.json({ id: result.insertId, title, description });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
 export const updateTask = async (req, res) => {
   try {
     const result = await pool.query("UPDATE tasks SET ? WHERE id = ?", [
