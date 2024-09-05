@@ -12,6 +12,11 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // para que los datos que lleguen en formato JSON
 
+
+app.get("/", (req, res) => {
+    res.send("MyTask API");
+});
+
 app.use(indexRoutes);
 app.use(authRoutes); // rutas de autenticación de usuario
 app.use(taskRoutes);
