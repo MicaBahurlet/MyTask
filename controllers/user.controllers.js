@@ -8,7 +8,7 @@ export const registerUser = async (req, res) => {
     try {
       const { username, email, password } = req.body;
   
-      // Verifico si el usuario ya existe
+      // verifico si el usuario ya existe
       const [existingUser] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
   
       if (existingUser.length > 0) {
@@ -35,7 +35,7 @@ export const loginUser = async (req, res) => {
     try {
       const { username, password } = req.body;
   
-      // Buscar el usuario en la base de datos
+      // busci el usuario en la base de datos
       const [users] = await pool.query("SELECT * FROM users WHERE username = ?", [username]);
   
       if (users.length === 0) {
@@ -44,7 +44,7 @@ export const loginUser = async (req, res) => {
   
       const user = users[0];
   
-      // comparar contraseña nueva con la almacenada
+      // comparo contraseña nueva con la almacenada
       const isMatch = await bcrypt.compare(password, user.password);
   
       if (!isMatch) {
